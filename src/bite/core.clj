@@ -13,9 +13,11 @@
   "Build a function which routes a request to the correct handler."
   (fn [req]
     (let [uri (:uri req)
+          req-m (:request-method req)
           r-keys (map re-pattern (keys routes))
           matches (filter #(re-seq %1 uri) r-keys)
-          m-funs (map #(get routes (str %1)) matches)]
+          m-funs-h (map #(get routes (str %1)) matches)
+          m-funs (map #(get %1 req-m) m-funs-h)]
       (apply (first (concat m-funs [bad-uri])) [req]))))
 
 
@@ -25,8 +27,10 @@
 (defn idem [req] req))
 
 (def app (route
-          {"/user/.*" idem-p
-           "/index" idem }))
+          {"/user/.*" {:get idem-p
+                       :post idem}
+           "/index" {:get idem-p
+                     :post idem}}))
 
 
       
