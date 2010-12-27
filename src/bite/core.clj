@@ -11,11 +11,17 @@
 
 (defn route [routes]
   "Build a function which routes a request to the correct handler."
+  "E.g. (def myapp (route
+                     {\"/*\"       {:get home-fn
+                                    :post process-fn}
+                      \"/user/.*\" {:get user-fn}}))"
   (fn [req]
     (let [uri (:uri req)
           req-m (:request-method req)
           r-keys (map re-pattern (keys routes))
+          ;; match routes against the request uri
           matches (filter #(re-seq %1 uri) r-keys)
+          ;; match against request-method
           m-funs-h (map #(get routes (str %1)) matches)
           m-funs (map #(get %1 req-m) m-funs-h)]
       (apply (first (concat m-funs [bad-uri])) [req]))))
