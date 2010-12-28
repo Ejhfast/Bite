@@ -52,12 +52,12 @@
 
 (def app (route
           {
-           ;; A regex to match on uris
+           ;; Key: a (string) regex to match on uris
+           ;; Value: a hash mapping request type to handler
            "/user/.*"
-           ;; Hash that maps to various handlers
            {:get idem-p
             :post idem}
-           ;; Another regex, for second uri ... 
+           ;; For another uri...  
            "/index"
            {:get idem-p
             :post idem}
