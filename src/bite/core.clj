@@ -51,14 +51,19 @@
 (defn idem [req] req))
 
 (def app (route
-          { "/user/.*"
-              {:get idem-p
-               :post idem}
-            "/index"
-              {:get idem-p
-               :post idem}
-            :middleware
-              [wrap-params] }))
+          {
+           ;; A regex to match on uris
+           "/user/.*"
+           ;; Hash that maps to various handlers
+           {:get idem-p
+            :post idem}
+           ;; Another regex, for second uri ... 
+           "/index"
+           {:get idem-p
+            :post idem}
+           ;; Apply various bits of middleware   
+           :middleware
+           [wrap-params] }))
 
 
       
