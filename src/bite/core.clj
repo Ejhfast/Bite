@@ -21,6 +21,8 @@
          (recur rst next))
        arg))
 
+;; Main app-building functions
+
 (defn route [routes]
   "Build a function which routes a request to the correct handler."
   "E.g. (def myapp (route
@@ -37,7 +39,9 @@
           ;; match against request-method
           m-funs-h (map #(get routes (str %1)) matches)
           m-funs (map #(get %1 req-m) m-funs-h)
+          ;; get first matching route
           res-fun (first (concat m-funs [bad-uri]))]
+      ;; apply middleware to route, if any exists
       (apply (compose-list mddl res-fun) [req]))))
 
 
